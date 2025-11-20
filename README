@@ -1,0 +1,8 @@
+Prerequisites:
+A working install of xtide including tide in your path
+env var for hfile set (export HFILE_PATH=/path/to/harmonics-dwf.tcd)
+libtcd (path needs to be specified in ./src/nearest_tide.py)
+python (you need to chmod +x ./src/nearest_tide.py)
+pcal in path and compiled\installed after patching with included ./writefil.c.diff aka (patch /path/to/pcal/src/writefil.c ./writefil.c.diff)
+node.js
+from current directory (npm install, npm start)

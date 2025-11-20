@@ -1,0 +1,502 @@
+768a769,783
+> 
+>    /* define the default astrological event colors in case the user includes none */
+>    printf("/hightidecolor {1 1 1 1 setcmykcolor} def\n");
+>    printf("/lowtidecolor {1 1 1 1 setcmykcolor} def\n");
+>    printf("/suncolor {1 1 1 1 setcmykcolor} def\n");
+>    printf("/mooncolor {1 1 1 1 setcmykcolor} def\n");
+> 
+>    /* color change strings - special charachters */
+>    printf("/hightide (\\056hightide) def\n");
+>    printf("/lowtide (\\056lowtide) def\n");
+>    printf("/red (\\056red) def\n");
+>    printf("/green (\\056green) def\n");
+>    printf("/blue (\\056blue) def\n");
+>    printf("/yellow (\\056yellow) def\n");
+>    printf("/black (\\056black) def\n");
+942a958
+> 
+1061a1078,1102
+>    printf("%% -- bgfill => --\n");
+>    printf("%% fill some day box with a color\n");
+>    printf("\n");
+>    printf("%% set fill box color using four values as cmyk levels\n");
+>    printf("%%\n");
+>    printf("\n");
+>    printf("/bgfill {\n");
+>    printf("/daybgk exch def\n");
+>    printf("/daybgy exch def\n");
+>    printf("/daybgm exch def\n");
+>    printf("/daybgc exch def\n");
+>    printf("/daybg exch def\n");
+>    printf("\n");
+>    printf("		%% move to position and fill the box\n");
+>    printf("                        startbox daybg add 1 sub boxpos moveto\n");
+>    printf("			gsave\n");
+>    printf("			daybgc daybgm daybgy daybgk setcmykcolor\n");
+>    printf("			daywidth 0 rlineto\n");
+>    printf("			0 negdayheight rlineto\n");
+>    printf("			negdaywidth 0 rlineto\n");
+>    printf("			closepath fill\n");
+>    printf("			grestore\n");
+>    printf("} def\n");
+>    printf("\n");
+> 
+1079a1121,1131
+> 
+>    /*
+> 
+>      We need to call the day background fill color procedures here before other
+>      elements are drawn so they dont get drawn on top of. Lets not draw them in
+>      the small calendars.
+> 
+>    */
+> 
+>    printf("     calsize small ne { calsize medium ne {bgfilllist} if } if              %% day background colors\n");
+> 
+1349a1402,1496
+>          /* tidecolor */
+>          printf("%% tidecolor\n");
+>          printf("%%\n");
+>          printf("/tidecolor {\n");
+>          printf("/2colK exch def /2colY exch def\n");
+>          printf("/2colM exch def /2colC exch def\n");
+>          printf("/placeholder exch def /1colK exch def\n");
+>          printf("/1colY exch def /1colM exch def\n");
+>          printf("/1colC exch def /placeholder exch def\n");
+>          printf("/mytext exch def /day exch def\n");
+>          printf("/hightidecolor {1colC 1colM 1colY 1colK setcmykcolor} bind def\n");
+>          printf("/lowtidecolor {2colC 2colM 2colY 2colK setcmykcolor} bind def\n");
+>          printf("} bind def\n");
+> 
+>          /* suncolor */
+>          printf("%% suncolor\n");
+>          printf("%%\n");
+>          printf("/suncolor {\n");
+>          printf("/colK exch def\n");
+>          printf("/colY exch def /colM exch def\n");
+>          printf("/colC exch def /mytext exch def /day exch def\n");
+>          printf("colC colM colY colK setcmykcolor\n");
+>          printf("} bind def\n");
+> 
+>           /* mooncolor */
+>          printf("%% mooncolor\n");
+>          printf("%%\n");
+>          printf("/mooncolor {\n");
+>          printf("/colK exch def\n");
+>          printf("/colY exch def /colM exch def\n");
+>          printf("/colC exch def /mytext exch def /day exch def\n");
+>          printf("colC colM colY colK setcmykcolor\n");
+>          printf("} bind def\n");
+> 
+>    /* WARNING
+>    These added functions (tide sun moon) only display well on a "Letter" calendar
+>    with the options "opt -t Helvetica-Narrow/24 -d/8 -n/6 -K" Changing any of 
+>    these options skews the size and positioning of tide - sun - moon text
+>    because the numbers (like 0 -.75 below) are not relative to the other ps
+>    elements. I dont know enough ps to figure out the math. */
+>          /* tide text */
+>          printf("\n");
+>          printf("%% <day> <text> daytext => --\n");
+>          printf("%%\n");
+>          printf("%% print <text> in <day> box (below date)\n");
+>          printf("%%\n");
+>          printf("/tidetext {\n");
+>          printf("	/mytext exch def /day exch def\n");
+>          printf("	NotesFontSet\n");
+>          printf("	day datepos datefontsize large get 0.75 mul datemargin large get\n");
+>          printf("	  0 mul add notesfontsize 0.75 mul add sub dup\n");
+>          printf("	  /ypos exch def exch textmargin add exch moveto\n");
+>          printf("	  0 -.75 dayheight mul rmoveto\n");
+>          printf("	currentpoint pop /LM exch def\n");
+>          printf("	/RM LM daywidth textmargin 2 mul sub add def\n");
+>          printf("	/t 0 def\n");
+>          printf("	showtide\n");
+>          printf("} bind def\n\n");
+> 
+>          /* sun text */
+>          printf("\n");
+>          printf("%% <day> <text> daytext => --\n");
+>          printf("%%\n");
+>          printf("%% print <text> in <day> box (below date)\n");
+>          printf("%%\n");
+>          printf("/suntext {\n");
+>          printf("	/mytext exch def /day exch def\n");
+>          printf("	NotesFontSet\n");
+>          printf("	day datepos datefontsize large get 0.75 mul datemargin large get\n");
+>          printf("	  -0.9 mul add notesfontsize 0.75 mul add sub dup\n");
+>          printf("	  /ypos exch def exch textmargin add exch moveto\n");
+>          printf("	  .15 daywidth mul 0 rmoveto\n");
+>          printf("	currentpoint pop /LM exch def\n");
+>          printf("	/RM LM daywidth textmargin 2 mul sub add def\n");
+>          printf("	showtext\n");
+>          printf("} bind def\n\n");
+> 
+>          /* moon text */
+>          printf("\n");
+>          printf("%% <day> <text> daytext => --\n");
+>          printf("%%\n");
+>          printf("%% print <text> in <day> box (below date)\n");
+>          printf("%%\n");
+>          printf("/moontext {\n");
+>          printf("	/mytext exch def /day exch def\n");
+>          printf("	NotesFontSet\n");
+>          printf("	day datepos datefontsize large get 0.75 mul datemargin large get\n");
+>          printf("	  -0.9 mul add notesfontsize 0.75 mul add sub dup\n");
+>          printf("	  /ypos exch def exch textmargin add exch moveto\n");
+>          printf("	  .45 daywidth mul 0 rmoveto\n");
+>          printf("	currentpoint pop /LM exch def\n");
+>          printf("	/RM LM daywidth textmargin 2 mul sub add def\n");
+>          printf("	showtext\n");
+>          printf("} bind def\n\n");
+> 
+1441c1588
+<          printf("		[ linesep boldfont italicfont romanfont ] {\n");
+---
+>          printf("		[ linesep boldfont italicfont romanfont red green blue yellow black ] {\n");
+1448c1595
+<          printf("		%% n will be 0 if current word is an ordinary word, 1..4 if it\n");
+---
+>          printf("		%% n will be 0 if current word is an ordinary word, 1..9 if it\n");
+1462a1610,1619
+>          printf("\n");
+>          printf("			{0 1 1 0 setcmykcolor}	%% font => red (.red)\n");
+>          printf("\n");
+>          printf("			{1 0 1 0 setcmykcolor}	%% font => green (.green)\n");
+>          printf("\n");
+>          printf("			{1 1 0 0 setcmykcolor}	%% font => blue (.blue)\n");
+>          printf("\n");
+>          printf("			{0 0 1 0 setcmykcolor}	%% font => yellow (.yellow)\n");
+>          printf("\n");
+>          printf("			{0 0 0 1 setcmykcolor}	%% font => black (.black)\n");
+1466a1624,1680
+>          /* iterate through the crlf's and use their count to position
+>             tides in a tabular fashion */
+> 
+>    /* WARNING- this function was designed for my tides... There are usually only
+>    4 tides in a day here. what happens if there are five tides? Eric */
+> 
+>          /* showtide */
+>          printf("%% -- showtide => --\n");
+>          printf("%%\n");
+>          printf("%% print words in 'mytext', inserting line breaks where necessary (or requested)\n");
+>          printf("%%\n");
+>          printf("/showtide {\n");
+>          printf("	mytext {\n");
+>          printf("		/word exch def\n");
+>          printf("		/i 1 def\n");
+>          printf("		/n 0 def\n");
+>          printf("\n\n");
+>          printf("		%% look up current word in list of special formatting strings\n");
+>          printf("		[ linesep boldfont italicfont romanfont hightide lowtide] {\n");
+>          printf("			word eq {\n");
+>          printf("				/n i def\n");
+>          printf("			} if\n");
+>          printf("			/i i 1 add def\n");
+>          printf("		} forall\n");
+>          printf("\n");
+>          printf("		%% n will be 0 if current word is an ordinary word, 1..6 if it\n");
+>          printf("		%% is a formatting string; execute corresponding block of code\n");
+>          printf("		[\n");
+>          printf("			{ word prstr ( ) show }		%% ordinary word\n");
+>          printf("\n");
+>          printf("			{ crlf				%% line separator (.p)\n");
+>          printf("			  NotesFontSet                  %% reset font type\n");
+>          printf("\n");
+>          printf("                         /t t 1 add def\n");
+>          printf("                          t 1 eq {0 -.765 dayheight mul rmoveto\n");
+>          printf("                                 }if\n");
+>          printf("                          t 2 eq {.45 daywidth mul -.60 dayheight mul rmoveto}if\n");
+>          printf("                          t 3 eq {.45 daywidth mul -.615 dayheight mul rmoveto\n");
+>          printf("                                 }if\n");
+>          printf("                          }\n");
+>          printf("\n");
+>          printf("			{ NotesFontSet			%% font => bold (.b)\n");
+>          printf("			  /currfonttype BOLD def }\n");
+>          printf("\n");
+>          printf("			{ /currfonttype ITALIC def	%% font => italic (.i)\n");
+>          printf("			  notesfont findfont italicmatrix makefont setfont }\n");
+>          printf("\n");
+>          printf("			{ NotesFontSet }		%% font => roman (.r)\n");
+>          printf("\n");
+>          printf("			{ hightidecolor }		%% (.hightide) switch to different color for high tides\n");
+>          printf("\n");
+>          printf("			{ lowtidecolor }		%% (.lowtide) switch to different color for low tides\n");
+>          printf("		] n get exec\n");
+>          printf("	} forall\n");
+>          printf("} bind def\n");
+>          printf("\n");
+> 
+2727a2942,2945
+>          if (ci_strncmp(pd->text, "tidedata:", 9) == 0) continue; /* skip tide lines*/
+>          if (ci_strncmp(pd->text, "sundata:", 8) == 0) continue; /*  skip sun lines*/
+>          if (ci_strncmp(pd->text, "moondata:", 9) == 0) continue; /* skip moon lines*/
+>          if (ci_strncmp(pd->text, "bgfill:", 7) == 0) continue; /* skip day background color lines*/
+2730a2949,2952
+>          if (ci_strncmp(pd->text, "pscmd:", 6) == 0) { /* write pscmd string lines*/
+>             printf("%s \n", pd->text+6);
+>          continue;
+>          }
+2763a2986,3238
+>    find_tidetext
+> 
+>    Notes:
+> 
+>       This routine finds and prints the daily tide text for the specified month/year.
+> 
+> */
+> void find_tidetext (int month, int year, char *event)
+> {
+>    register int day;
+>    year_info *py;
+>    month_info *pm;
+>    register day_info *pd;
+>    int first;
+>    
+>    /* if no text for this year and month, return */
+>    
+>    if ((py = find_year(year, FALSE)) == NULL || (pm = py->month[month-1]) == NULL) {
+>       return;
+>    }
+>    
+>    /* walk array of day text pointers and linked lists of text */
+> 
+>    for (day = 1; day <= LAST_NOTE_DAY; day++) {
+>       for (pd = pm->day[day-1], first = TRUE;
+>            pd;
+>            pd = pd->next) {
+>          /* include only tide lines */
+> 	 if (ci_strncmp(pd->text, "tidedata:", 9) != 0) continue;
+>          if (ci_strncmp(pd->text+9, "cmyk:", 5) == 0) {
+>             printf("%d [()]%s tidecolor\n", day >= FIRST_NOTE_DAY ?
+>                    note_box(month, day, year) : day, pd->text+14);
+>          continue;
+>          }
+>          if (first) {
+>             printf("%d [ \n", day >= FIRST_NOTE_DAY ?
+>                    note_box(month, day, year) : day);
+>          }
+>          else {
+>             printf("\n");
+>             print_word(LINE_SEP);   /* separate lines */
+>             printf("\n");
+>          }
+>          this_day = day >= FIRST_NOTE_DAY ? 1 : day;
+>          RESET_DATE();   /* reset working date */
+>          if (debug_text) {
+>             if (day < FIRST_NOTE_DAY) {
+>                fprintf(stderr, "%02d/%02d/%d ", month, day, year);
+>             }
+>             else {
+>                fprintf(stderr, "%02d[%02d]%d  ", month, day - FIRST_NOTE_DAY + 1, year);
+>             }
+>          }
+>          print_pstext(pd->text+9);
+>          if (debug_text) fprintf(stderr, "\n");
+>          first = FALSE;
+>       }
+>       if (! first) {   /* wrap up call (if one made) */
+>          printf("\n] %s\n", event);
+>       }
+>    }
+> 
+>    return;
+> }
+> 
+> /* ---------------------------------------------------------------------------
+> 
+>    find_suntext
+> 
+>    Notes:
+> 
+>       This routine finds and prints the daily sunrise and sunset text for the specified month/year.
+> 
+> */
+> void find_suntext (int month, int year, char *event)
+> {
+>    register int day;
+>    year_info *py;
+>    month_info *pm;
+>    register day_info *pd;
+>    int first;
+>    
+>    /* if no text for this year and month, return */
+>    
+>    if ((py = find_year(year, FALSE)) == NULL || (pm = py->month[month-1]) == NULL) {
+>       return;
+>    }
+>    
+>    /* walk array of day text pointers and linked lists of text */
+> 
+>    for (day = 1; day <= LAST_NOTE_DAY; day++) {
+>       for (pd = pm->day[day-1], first = TRUE;
+>            pd;
+>            pd = pd->next) {
+>          /* include only sun lines */
+> 	 if (ci_strncmp(pd->text, "sundata:", 8) != 0) continue;
+>          if (ci_strncmp(pd->text+8, "cmyk:", 5) == 0) {
+>             printf("%d [()]%s suncolor\n", day >= FIRST_NOTE_DAY ?
+>                    note_box(month, day, year) : day, pd->text+13);
+>          continue;
+>          }
+>          if (first) {
+>             printf("%d [ \n", day >= FIRST_NOTE_DAY ?
+>                    note_box(month, day, year) : day);
+>          }
+>          else {
+>             printf("\n");
+>             print_word(LINE_SEP);   /* separate lines */
+>             printf("\n");
+>          }
+>          this_day = day >= FIRST_NOTE_DAY ? 1 : day;
+>          RESET_DATE();   /* reset working date */
+>          if (debug_text) {
+>             if (day < FIRST_NOTE_DAY) {
+>                fprintf(stderr, "%02d/%02d/%d ", month, day, year);
+>             }
+>             else {
+>                fprintf(stderr, "%02d[%02d]%d  ", month, day - FIRST_NOTE_DAY + 1, year);
+>             }
+>          }
+>          print_pstext(pd->text+8);
+>          if (debug_text) fprintf(stderr, "\n");
+>          first = FALSE;
+>       }
+>       if (! first) {   /* wrap up call (if one made) */
+>          printf("\n] %s\n", event);
+>       }
+>    }
+> 
+>    return;
+> }
+> 
+> /* ---------------------------------------------------------------------------
+> 
+>    find_moontext
+> 
+>    Notes:
+> 
+>       This routine finds and prints the daily moonset and moonrise text for the specified month/year.
+> 
+> */
+> void find_moontext (int month, int year, char *event)
+> {
+>    register int day;
+>    year_info *py;
+>    month_info *pm;
+>    register day_info *pd;
+>    int first;
+>    
+>    /* if no text for this year and month, return */
+>    
+>    if ((py = find_year(year, FALSE)) == NULL || (pm = py->month[month-1]) == NULL) {
+>       return;
+>    }
+>    
+>    /* walk array of day text pointers and linked lists of text */
+> 
+>    for (day = 1; day <= LAST_NOTE_DAY; day++) {
+>       for (pd = pm->day[day-1], first = TRUE;
+>            pd;
+>            pd = pd->next) {
+>          /* include only moon lines */
+> 	 if (ci_strncmp(pd->text, "moondata:", 9) != 0) continue;
+>          if (ci_strncmp(pd->text+9, "cmyk:", 5) == 0) {
+>             printf("%d [()]%s mooncolor\n", day >= FIRST_NOTE_DAY ?
+>                    note_box(month, day, year) : day, pd->text+14);
+>          continue;
+>          }
+>          if (first) {
+>             printf("%d [ \n", day >= FIRST_NOTE_DAY ?
+>                    note_box(month, day, year) : day);
+>          }
+>          else {
+>             printf("\n");
+>             print_word(LINE_SEP);   /* separate lines */
+>             printf("\n");
+>          }
+>          this_day = day >= FIRST_NOTE_DAY ? 1 : day;
+>          RESET_DATE();   /* reset working date */
+>          if (debug_text) {
+>             if (day < FIRST_NOTE_DAY) {
+>                fprintf(stderr, "%02d/%02d/%d ", month, day, year);
+>             }
+>             else {
+>                fprintf(stderr, "%02d[%02d]%d  ", month, day - FIRST_NOTE_DAY + 1, year);
+>             }
+>          }
+>          print_pstext(pd->text+9);
+>          if (debug_text) fprintf(stderr, "\n");
+>          first = FALSE;
+>       }
+>       if (! first) {   /* wrap up call (if one made) */
+>          printf("\n] %s\n", event);
+>       }
+>    }
+> 
+>    return;
+> }
+> 
+> /* ---------------------------------------------------------------------------
+> 
+>    find_bgfill
+> 
+>    Notes:
+> 
+>       This routine finds and prints the daily box background color for the specified month/year.
+> 
+> */
+> void find_bgfill (int month, int year, char *event)
+> {
+>    register int day;
+>    year_info *py;
+>    month_info *pm;
+>    register day_info *pd;
+>    
+>    /* if no text for this year and month, return */
+>    
+>    if ((py = find_year(year, FALSE)) == NULL || (pm = py->month[month-1]) == NULL) {
+>       return;
+>    }
+>    
+>    /* walk array of day text pointers and linked lists of text */
+>    for (day = 1; day <= LAST_NOTE_DAY; day++) {
+>       for (pd = pm->day[day-1];
+>            pd;
+>            pd = pd->next) {
+>          /* include only bgfill lines */
+> 	 if (ci_strncmp(pd->text, "bgfill:", 7) != 0) continue;
+>          
+>             printf("%d ", day >= FIRST_NOTE_DAY ?
+>                    note_box(month, day, year) : day);
+> 
+>          this_day = day >= FIRST_NOTE_DAY ? 1 : day;
+>          RESET_DATE();   /* reset working date */
+>          if (debug_text) {
+>             if (day < FIRST_NOTE_DAY) {
+>                fprintf(stderr, "%02d/%02d/%d ", month, day, year);
+>             }
+>             else {
+>                fprintf(stderr, "%02d[%02d]%d  ", month, day - FIRST_NOTE_DAY + 1, year);
+>             }
+>          }
+>          printf(pd->text+7);
+> printf(" %s\n", event);
+>          if (debug_text) fprintf(stderr, "\n");
+>       }
+>    }
+> 
+>    return;
+> }
+> 
+> /* ---------------------------------------------------------------------------
+> 
+3139a3615,3618
+>       printf("/bgfilllist {\n");
+>       find_bgfill(month, year, "bgfill");        /* day background color*/
+>       printf("} bind def\n");
+> 
+3145a3625,3627
+>       find_tidetext(month, year, "tidetext");        /* tide text */
+>       find_suntext(month, year, "suntext");          /* sun text */
+>       find_moontext(month, year, "moontext");        /* moon text */
