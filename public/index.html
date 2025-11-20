@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Hawaiian Moon & Tide Calendar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <style>
+    body {font-family:Arial;background:#001a33;color:#fff;margin:0;padding:20px;}
+    h1 {text-align:center;color:#00d4ff;}
+    .box {max-width:900px;margin:auto;background:rgba(0,40,80,0.9);padding:25px;border-radius:15px;}
+    #map {height:500px;margin:20px 0;border-radius:12px;box-shadow:0 0 20px #00f;}
+    button {background:#00d4ff;color:#000;font-weight:bold;padding:15px;font-size:1.2em;border:none;border-radius:8px;cursor:pointer;width:100%;margin-top:20px;}
+    button:hover {background:#00ffcc;}
+    .status {background:rgba(0,0,0,0.7);padding:15px;border-radius:8px;margin:10px 0;font-size:1.1em;}
+    select, textarea, input[type=file] {width:100%;padding:12px;margin:8px 0;border-radius:8px;}
+    label {display:block;margin:8px 0;}
+  </style>
+</head>
+<body>
+<div class="box">
+  <h1>Hawaiian Moon & Tide Calendar</h1>
+  <p style="text-align:center;">Click anywhere on the map to select your tide location</p>
+
+  <div id="map"></div>
+  <div class="status" id="status">Click anywhere on the map to select your location</div>
+
+  <form id="form" action="/generate" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="station" id="station" required>
+
+    <label>Month <select name="startMonth" required>
+      <option value="01">January</option><option value="02">February</option>
+      <option value="03">March</option><option value="04">April</option>
+      <option value="05">May</option><option value="06">June</option>
+      <option value="07">July</option><option value="08" selected>August</option>
+      <option value="09">September</option><option value="10">October</option>
+      <option value="11">November</option><option value="12">December</option>
+    </select></label>
+
+    <label>Year <select name="startYear" required>
+      <option>2025</option><option selected>2026</option><option>2027</option><option>2028</option>
+    </select></label>
+
+    <label>Custom Events<br><textarea name="customText" rows="4">
+#If you want custom dates on your calendar, erase everything in this field and enter your custom dates here in the format of:
+#Month/Day/Year Event
+8/04/26 Build fence
+8/06/26 Plant huli
+8/13/26 Go fishing
+8/18/26 Plant bananas and melon
+8/25/26 Collect jellyfish
+#The following dates are examples for added functionality, expert users only.
+8/01/26 pscmd:0.82 0.84 0 0.13 setcmykcolor
+8/01/26 This is blue
+8/02/26 pscmd:1 1 1 1 setcmykcolor
+8/02/26 This is black
+8/03/26 .blue This is blue .black This is black
+8/13/26 bgfill:0 0.2 0.2 0
+8/13/26 This day has a pink background
+12/8/26 Midnight launch
+#All of the Hawaiian lunar names have been defined so that you may use them as dates themselves!
+Hilo_def This is the night after an astrological new moon, also called Hilo.
+Emi_def The moon will decrease in size for the next ten days.
+    </TEXTAREA>
+    </label>
+    <br>Click <a href="mahina.def.txt" Target="_blank">here</a> for a list of pre-defined names that are valid to be used like dates in the Custom Dates field</a>
+    <label><input type="checkbox" name="options" value="language" checked> Hawaiian language, these are the americanized Hawaiian day and month names.</label>
+    <label><input type="checkbox" name="options" value="tide" checked> Tides*</label>
+    <label><input type="checkbox" name="options" value="sun" checked> Sunrise / Sunset*</label>
+    <label><input type="checkbox" name="options" value="moon" checked> Moonrise / Moonset*</label>
+    <label><input type="checkbox" name="options" value="mahina" checked> Mahina names, these are the traditional Hawaiian names for each day, month and phase of the moon.</label>
+    <label><input type="checkbox" name="options" value="holidays" checked> US Holidays</label>
+    <label><input type="checkbox" name="options" value="custom" checked> Custom dates</label>
+    <label>Background photo (11×17 JPG)<br><input type="file" name="background" accept="image/jpeg"></label>
+    <br>* Requires a tide location to be selected on the map
+
+    <button type="submit">Generate Calendar</button>
+  </form>
+</div>
+<br>
+There is a 13th Hawaiian lunar month and there is no record of its name. It is used once every three years. I do not know when it was last used or should be used again.
+<br>
+<br>
+The lunar month names between islands varried. For example, the ninth month on the Big Island is named Māhoe Mua while on Oahu it is named Hilinaehu. To produce traditional Hawaiian moon phase name information for Oahu vs the Big Island, add "def oahu_def" to the Custom Events text area above, even if you do not check the box to include custom dates. Big Island will be the default otherwise.
+<br>
+<br>
+A great companion to this calendar is the Ancient Hawaiian Moon Calendar Related to Fishing & Farming by the Prince Kuhio Hawaiian Civic Club. This is a poster sized calendar specifying what farming, hunting and fishing tasks are appropriate for each phase of the moon.
+<br>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+let marker;
+let map;
+
+function setDataDependentCheckboxes(enabled) {
+  const checkboxes = {
+    tide: document.querySelector('input[name="options"][value="tide"]'),
+    sun:  document.querySelector('input[name="options"][value="sun"]'),
+    moon: document.querySelector('input[name="options"][value="moon"]')
+  };
+
+  Object.values(checkboxes).forEach(cb => {
+    cb.checked = enabled;   // uncheck when disabled
+    cb.disabled = !enabled;
+    // Optional: add visual feedback
+    cb.parentNode.style.opacity = enabled ? '1' : '0.5';
+    cb.parentNode.style.pointerEvents = enabled ? 'auto' : 'none';
+  });
+}
+
+function initMap() {
+  map = L.map('map').setView([20.8, -156.5], 8);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  map.on('click', async function(e) {
+    const lat = e.latlng.lat;
+    const lng = e.latlng.lng;
+    
+    console.log('Map clicked →', lat, lng);
+    document.getElementById('status').textContent = `Querying ${lat.toFixed(5)}, ${lng.toFixed(5)}…`;
+
+    if (marker) map.removeLayer(marker);
+    marker = L.marker([lat, lng]).addTo(map);
+
+    const payload = { lat, lng };
+
+    try {
+      const r = await fetch('/api/nearest', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const stations = await r.json();
+      console.log('Got stations →', stations);
+
+      if (stations && stations.length > 0) {
+        const best = stations[0];
+        document.getElementById('station').value = best.name;
+        document.getElementById('status').innerHTML = `<strong>${best.name}</strong><br>${best.dist} km away`;
+
+        setDataDependentCheckboxes(true);
+
+      } else {
+        document.getElementById('station').value = '';
+        document.getElementById('status').textContent = 'No tide stations found nearby';
+
+        setDataDependentCheckboxes(false);
+      }
+    } catch (err) {
+      console.error(err);
+      document.getElementById('status').textContent = 'Server error – cannot find tide data';
+      document.getElementById('station').value = '';
+
+      setDataDependentCheckboxes(false);
+    }
+  });
+}
+
+setDataDependentCheckboxes(false);
+
+initMap();
+</script>
+</body>
+</html>
