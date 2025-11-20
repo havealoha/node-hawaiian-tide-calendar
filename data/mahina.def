@@ -1,0 +1,55 @@
+opt -z 10
+year all
+1st day after 1st new_moon in year Kaelo_def
+1st day after 2nd new_moon in year Kaulua_def
+1st day after 3rd new_moon in year Nana_def
+1st day after 4th new_moon in year Welo_def
+1st day after 5th new_moon in year Ikiiki_def
+1st day after 6th new_moon in year Kaaona_def
+1st day after 7th new_moon in year Hinaiaeleele_def
+#define big island
+1st day after 8th new_moon in year MahoeMua_def
+1st day after 9th new_moon in year MahoeHope_def
+#might as well define both
+#define oahu
+1st day after 8th new_moon in year Hilinaehu_def
+1st day after 9th new_moon in year Hilinama_def
+#
+1st day after 10th new_moon in year Ikuwa_def
+1st day after 11th new_moon in year Welehu_def
+1st day after 12th new_moon in year Makalii_def
+1st day after 13th new_moon in year Kaelo_def
+1st day after all new_moon in all Hoonui_def
+11th day after all new_moon in all Poepoe_def
+21st day after all new_moon in all Emi_def
+1st day after all new_moon in all Hilo_def
+2nd day after all new_moon in all Hoaka_def
+3rd day after all new_moon in all Kukahi_def
+4th day after all new_moon in all Kulua_def
+5th day after all new_moon in all Kukolu_def
+6th day after all new_moon in all Kupau_def
+7th day after all new_moon in all Olekukahi1_def
+8th day after all new_moon in all Olekulua1_def
+9th day after all new_moon in all Olekukolu1_def
+10th day after all new_moon in all Olepau1_def
+11th day after all new_moon in all Huna_def
+12th day after all new_moon in all Mohalu_def
+13th day after all new_moon in all Hua_def
+14th day after all new_moon in all Akua_def
+15th day after all new_moon in all Hoku_def
+16th day after all new_moon in all Mahealani_def
+17th day after all new_moon in all Kulu_def
+18th day after all new_moon in all Laaukukaki_def
+19th day after all new_moon in all Laaukulua_def
+20th day after all new_moon in all Laaupau_def
+21th day after all new_moon in all Olekukahi2_def
+22st day after all new_moon in all Olekulua2_def
+23nd day after all new_moon in all Olepau2_def
+24rd day after all new_moon in all Kaloakukahi_def
+25th day after all new_moon in all Kaloakulua_def
+26th day after all new_moon in all Kaloapau_def
+27th day after all new_moon in all Kane_def
+28th day after all new_moon in all Lono_def
+29th day after all new_moon in all Mauli_def
+delete all new_moon in all Mauli_def
+all new_moon in all Muku_def

@@ -1,0 +1,112 @@
+#The Hawaiian months had different names from island to island.
+#Use if def to define between Hawaii and Oahu Islands.
+#lets name the Hawaiian months
+#Makali`i is the first month in the Hawaiian year
+#Every three years we need to shift the months forward or backward by one.
+#Not enough information to do this yet....
+#def big_island_def
+#def oahu_def
+year all
+1st day after 1st new_moon in year \056b K\340`elo
+1st day after 2nd new_moon in year \056b Kaulua
+1st day after 3rd new_moon in year \056b Nana
+1st day after 4th new_moon in year \056b Welo
+1st day after 5th new_moon in year \056b Ikiiki
+1st day after 6th new_moon in year \056b Ka`aona
+1st day after 7th new_moon in year \056b Hinaia`ele`ele
+ifdef big_island_def
+1st day after 8th new_moon in year \056b M\340hoe Mua
+1st day after 9th new_moon in year \056b M\340hoe Hope
+endif
+ifdef oahu_def
+1st day after 8th new_moon in year \056b Hilinaehu
+1st day after 9th new_moon in year \056b Hilinam\340
+endif
+1st day after 10th new_moon in year \056b `Ikuw\340
+1st day after 11th new_moon in year \056b Welehu
+1st day after 12th new_moon in year \056b Makali`i
+1st day after 13th new_moon in year \056b K\340`elo
+#The lunar month had three divisions or "Anahulu"
+#The first 10 days as the moon was "growing bigger"
+1st day after all new_moon in all \056i Hoonui
+#The next 10 days as the moon was nearly "full"
+11th day after all new_moon in all \056i Poepoe
+#The remaining days of the lunar cycle as the moon "decreases"
+21st day after all new_moon in all \056i Emi
+#lets name the Hawaiian nights according to the moon phase
+# because of the bug spanning years we need to include this
+# if this is january, we need to create the lunar days forward from the last new_moon
+# in the previous years december
+# the line 'year ####' is automagically changed in this file by php based on the users
+# choice of printing january
+ifdef january_def
+year ####
+# it would be nice if pcal allowed you to do 'year %y-1'
+1st day after last new_moon in December Hilo
+2nd day after last new_moon in December Hoaka
+3rd day after last new_moon in December K\376kahi
+4th day after last new_moon in December K\376lua
+5th day after last new_moon in December K\376kolu
+6th day after last new_moon in December K\376pau
+7th day after last new_moon in December `Olek\376kahi
+8th day after last new_moon in December `Olek\376lua
+9th day after last new_moon in December `Olek\376kolu
+10th day after last new_moon in December `Olepau
+11th day after last new_moon in December Huna
+12th day after last new_moon in December Mohalu
+13th day after last new_moon in December Hua
+14th day after last new_moon in December Akua
+15th day after last new_moon in December Hoku
+16th day after last new_moon in December M\340healani
+17th day after last new_moon in December Kulu
+18th day after last new_moon in December L\340`auk\376kaki
+19th day after last new_moon in December L\340`auk\376lua
+20th day after last new_moon in December L\340`aupau
+21th day after last new_moon in December `Olek\376kahi
+22st day after last new_moon in December `Olek\376lua
+23nd day after last new_moon in December `Olepau
+24rd day after last new_moon in December K\340loak\376kahi
+25th day after last new_moon in December K\340loak\376lua
+26th day after last new_moon in December K\340loapau
+27th day after last new_moon in December K\340ne
+28th day after last new_moon in December Lono
+29th day after last new_moon in December Mauli
+year all
+endif
+year all
+# it would also be nice to be able to do 'define Hilo 1st day after all new_moon in all'
+1st day after all new_moon in all Hilo
+2nd day after all new_moon in all Hoaka
+3rd day after all new_moon in all K\376kahi
+4th day after all new_moon in all K\376lua
+5th day after all new_moon in all K\376kolu
+6th day after all new_moon in all K\376pau
+7th day after all new_moon in all `Olek\376kahi
+8th day after all new_moon in all `Olek\376lua
+9th day after all new_moon in all `Olek\376kolu
+10th day after all new_moon in all `Olepau
+11th day after all new_moon in all Huna
+12th day after all new_moon in all Mohalu
+13th day after all new_moon in all Hua
+14th day after all new_moon in all Akua
+15th day after all new_moon in all Hoku
+16th day after all new_moon in all M\340healani
+17th day after all new_moon in all Kulu
+18th day after all new_moon in all L\340`auk\376kaki
+19th day after all new_moon in all L\340`auk\376lua
+20th day after all new_moon in all L\340`aupau
+21th day after all new_moon in all `Olek\376kahi
+22st day after all new_moon in all `Olek\376lua
+23nd day after all new_moon in all `Olepau
+24rd day after all new_moon in all K\340loak\376kahi
+25th day after all new_moon in all K\340loak\376lua
+26th day after all new_moon in all K\340loapau
+27th day after all new_moon in all K\340ne
+28th day after all new_moon in all Lono
+29th day after all new_moon in all Mauli
+#Some people count Mauli as the last day of the lunar cycle in some months, some count Muku always
+#lets count Muku always
+#lets delete the day "Mauli" before "Hilo" if it exists
+delete all new_moon in all Mauli
+#put "Muku" just before "Hilo"
+all new_moon in all Muku
