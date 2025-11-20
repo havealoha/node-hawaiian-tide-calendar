@@ -1,0 +1,7 @@
+opt -t ZapfChancery-MediumItalic/24 -d/8 -n/6 -M -z10 -W left -B -K
+#Helvetica-Narrow
+year all
+first day in all sundata:cmyk:.0 0.5 0.85 0.12
+first day in all moondata:cmyk:0 1 0 0.5
+first day in all tidedata:cmyk:(tide1) 0.82 0.84 0 0.13 (tide2) 1 0 1 .5
+include include.dat
